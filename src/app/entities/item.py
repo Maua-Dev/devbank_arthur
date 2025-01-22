@@ -1,4 +1,4 @@
-#DEFINIÇÃO DOS ATRIBUTOS A PARTIR DE UMA CLASSE ITEM
+#DEFINIÇÃO DE ENTIDADE A PARTIR DE UMA CLASSE ITEM
 
 from ..errors.entity_errors import ParamNotValidated
 
