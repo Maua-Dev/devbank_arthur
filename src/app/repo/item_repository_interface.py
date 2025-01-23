@@ -6,7 +6,4 @@ class IItemRepository(ABC):
     
     @staticmethod
     def get_items(self) -> List[Item]:
-        '''
-        Returns all the itens in the database 
-        '''
         pass
