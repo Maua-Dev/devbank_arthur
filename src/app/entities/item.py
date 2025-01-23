@@ -17,3 +17,11 @@ class Item:
             return False
         else:
             return True
+        
+    def to_dict(self) -> dict:
+        return {
+            "nome": self.name,
+            "email": self.email,
+            "item_id": self.item_id,
+            "password": self.password
+        }
