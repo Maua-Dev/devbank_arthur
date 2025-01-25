@@ -1,5 +1,5 @@
 #DEFINIÇÃO DE ENTIDADE A PARTIR DE UMA CLASSE ITEM
-
+from pydantic import BaseModel
 from ..errors.entity_errors import ParamNotValidated
 
 class Item:
@@ -8,15 +8,6 @@ class Item:
         self.email = email
         self.item_id = item_id
         self.password = password
-        if not self.password_controler(password):
-            raise ParamNotValidated("password", "must have at least 5 characters")
-    
-    @staticmethod    
-    def password_controler(password: str):
-        if len(password) < 5:
-            return False
-        else:
-            return True
         
     def to_dict(self) -> dict:
         return {
@@ -25,3 +16,12 @@ class Item:
             "item_id": self.item_id,
             "password": self.password
         }
+        
+class ItemInput(BaseModel):
+    name = str
+    email = str
+    item_id = int
+    password = str
+
+class Config:
+    arbitrary_types_allowed = True

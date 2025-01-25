@@ -1,5 +1,5 @@
 from typing import List
-from src.app.entities.item import Item
+from src.app.entities.item import Item, ItemInput
 from src.app.repo.item_repository_interface import IItemRepository
 
 class ItemRepositoryMock(IItemRepository):
@@ -15,3 +15,7 @@ class ItemRepositoryMock(IItemRepository):
         
     def get_items(self) -> List[Item]:
         return self.items
+    
+    def create_item(self, item: Item) -> Item:
+        self.items.append(item)
+        return item
