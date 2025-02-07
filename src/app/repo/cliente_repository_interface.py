@@ -1,8 +1,8 @@
-from abc import ABC
-from typing import List
+from abc import ABC, abstractmethod
+from typing import List, Optional
 from src.app.entities.cliente import Cliente
 
-class IItemRepository(ABC):
+class IClienteRepository(ABC):
 
     @abstractmethod
     def get_all_clients(self) -> List[Cliente]:

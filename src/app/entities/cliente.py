@@ -77,4 +77,12 @@ class Cliente:
             "conta": self.account,
             "saldo_atual": self.current_balance
         }
-        
+    
+    @staticmethod
+    def client_id(client_id: int) -> Tuple[bool, str]:
+        if client_id is None:
+            return (False, "Id do cliente não pode ser nulo")
+        if type(client_id) != int:
+            return (False, "Id do cliente deve ser um número inteiro")
+        else:
+            return (True, "")
