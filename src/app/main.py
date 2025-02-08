@@ -1,3 +1,18 @@
+import time
+from fastapi import FastAPI, HTTPException
+from magnum import magnum
+from datetime import datetime
+from .environments import Environments
+from .errors.entity_errors import ParamNotValidated
+from .enums.item_type_enum import ItemTypeEnum
+from .entities.cliente import Cliente
+from .entities.transacao import Transacao
+from .repo.cliente_repository import ClienteRepository
+
+app = FastAPI()
+
+repo = Environments.get_cliente_repo()()
+
 # from fastapi import FastAPI
 # from src.app.environments import Environments
 # from .repo.item_repository_mock import ItemRepositoryMock

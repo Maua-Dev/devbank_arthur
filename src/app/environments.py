@@ -34,15 +34,32 @@ class Environments:
 
         self.stage = STAGE[os.environ.get("STAGE")]
 
+    # @staticmethod
+    # def get_item_repo() -> IItemRepository:
+    #     if Environments.get_envs().stage == STAGE.TEST:
+    #         from .repo.item_repository_mock import ItemRepositoryMock
+    #         return ItemRepositoryMock
+    #     # use "elif" conditional to add other stages
+    #     else:
+    #         raise EnvironmentNotFound("STAGE")
+    
     @staticmethod
-    def get_item_repo() -> IItemRepository:
+    def get_cliente_repo() -> IClienteRepository:
         if Environments.get_envs().stage == STAGE.TEST:
-            from .repo.item_repository_mock import ItemRepositoryMock
-            return ItemRepositoryMock
+            from .repo.cliente_repository_mock import ClienteRepositoryMock
+            return ClienteRepositoryMock
         # use "elif" conditional to add other stages
         else:
             raise EnvironmentNotFound("STAGE")
         
+    @staticmethod
+    def get_transacao_repo() -> ITransacaoRepository:
+        if Environments.get_envs().stage == STAGE.TEST:
+            from .repo.transacao_repository_mock import TransacaoRepositoryMock
+            return TransacaoRepositoryMock
+        # use "elif" conditional to add other stages
+        else:
+            raise EnvironmentNotFound("STAGE")    
 
     @staticmethod
     def get_envs() -> "Environments":
