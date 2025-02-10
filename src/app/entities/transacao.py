@@ -87,3 +87,11 @@ class Transacao:
             "saldo_atual": self.current_balance,
             "horario_transacao": self.timestamp
         }
+    
+    @staticmethod   
+    def transaction_id(transaction_id:int ) -> Tuple[bool, str]:
+        if transaction_id is None:
+            return (False, "O id da transação não pode ser nulo")
+        if type(transaction_id) != int:
+            return (False, "O id da transação deve ser um inteiro")
+        return (True, "")
