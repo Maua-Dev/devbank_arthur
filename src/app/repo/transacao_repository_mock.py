@@ -25,8 +25,8 @@ class TransacaoRepositoryMock(ITransacaoRepository):
     
     def create_withdraw(self, value: float, current_balance: float, timestamp: float) -> Transacao:
         withdraw = Transacao(type_transaction=ItemTypeEnum.WITHDRAW, value=value, current_balance=current_balance, timestamp=timestamp)
-        return self.create_transaction(transaction)
+        return self.create_transaction(withdraw)
     
     def create_deposit(self, value: float, current_balance: float, timestamp: float) -> Transacao:
         deposit = Transacao(type_transaction=ItemTypeEnum.DEPOSIT, value=value, current_balance=current_balance, timestamp=timestamp)
-        return self.create_transaction(transaction)
+        return self.create_transaction(deposit)
