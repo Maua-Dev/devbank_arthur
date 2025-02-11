@@ -14,7 +14,7 @@ app = FastAPI()
 repo_cliente = Environments.get_cliente_repo()()
 repo_transacao = Environments.get_transacao_repo()()
 
-clienteTeste = repo.get_client(1)
+clienteTeste = repo_cliente.get_client(1)
 
 #CRIANDO AS ROTAS
 
@@ -27,7 +27,7 @@ def get_all_clients():
     }
 
 #rota GET /
-@app.get("/")
+@app.get("/clientes/get_client")
 def get_client(client_id: int):
     valid_client_id = Cliente.client_id(client_id=client_id)
     if not valid_client_id[0]:
@@ -39,12 +39,12 @@ def get_client(client_id: int):
         raise HTTPException(status_code=404, detail="Cliente não encontrado")
     
     return {
-        "client_id": cliente.client_id,
-        "client": cliente.to_dict()
+        "ID do Cliente": cliente.client_id(),
+        "Dados do Cliente": cliente.to_dict()
     }
 
 #rota POST /withdraw
-@app.post("/withdraw", status_code=200)
+@app.post("/withdraw", status_code=201)
 def create_withdraw(request: dict):
     
     modelo = {
@@ -59,27 +59,28 @@ def create_withdraw(request: dict):
     
     quantia = 0.0
     
-    # for chave in request:
-    #     if model.get(chave, None) is not None:
-    #         quantia += float(chave) * float(request[chave])
+    for chave in request:
+        if model.get(chave, None) is not None:
+            quantia += float(chave) * float(request[chave])
 
-    # if quantia > clienteTeste.saldo_atual:
-    #     raise HTTPException(status_code=403, detail="Saldo insuficiente")
+    if quantia > clienteTeste.saldo_atual*2:
+        raise HTTPException(status_code=403, detail="Saldo insuficiente")
 
-    # clienteTeste.saldo_atual -= quantia
+    clienteTeste.saldo_atual += quantia
 
-    # transacao = Transacao(saldoNaHora=clienteTeste.saldo_atual, hora=time.time(), quantia=quantia, tipo=ItemTypeEnum.WITHDRAW)
+    transacao = Transacao(type_transaction=ItemTypeEnum.DEPOSIT, value=quantia, current_balance=clienteTeste.saldo_atual, timestamp=time.time())
 
-    # repot.cria_transacao(transac=transacao, transac_id=int((transacao.saldoNaHora * transacao.quantia) / 1000))
+    repo_transacao.cria_transacao(transac=transacao, transac_id=int((transacao.saldoNaHora * transacao.quantia) / 1000))
 
-    # return {
-    #     "hora": time.time(),
-    #     "saldoNaHora": clienteTeste.saldo_atual
-    # }
+    return {
+        "horario_transacao": time.time(),
+        "saldo_atual": clienteTeste.saldo_atual
+    }
 
 #rota POST /deposit
-@app.post("/deposit", status_code=200)
+@app.post("/deposit", status_code=201)
 def create_deposit(request: dict):
+    
     modelo = {
         "2": 0,
         "5": 0,
@@ -92,32 +93,32 @@ def create_deposit(request: dict):
     
     quantia = 0.0
     
-    # for chave in request:
-    #     if model.get(chave, None) is not None:
-    #         quantia += float(chave) * float(request[chave])
+    for chave in request:
+        if model.get(chave, None) is not None:
+            quantia += float(chave) * float(request[chave])
 
-    # if quantia > clienteTeste.saldo_atual*2:
-    #     raise HTTPException(status_code=403, detail="Saldo insuficiente")
+    if quantia > clienteTeste.saldo_atual*2:
+        raise HTTPException(status_code=403, detail="Saldo insuficiente")
 
-    # clienteTeste.saldo_atual += quantia
+    clienteTeste.saldo_atual += quantia
 
-    # transacao = Transacao(saldoNaHora=clienteTeste.saldo_atual, hora=time.time(), quantia=quantia, tipo=TransacTypeEnum.DEPOSIT)
+    transacao = Transacao(type_transaction=ItemTypeEnum.DEPOSIT, value=quantia, current_balance=clienteTeste.saldo_atual, timestamp=time.time())
 
-    # repot.cria_transacao(transac=transacao, transac_id=int((transacao.saldoNaHora * transacao.quantia) / 1000))
+    repo_transacao.cria_transacao(transac=transacao, transac_id=int((transacao.saldoNaHora * transacao.quantia) / 1000))
 
-    # return {
-    #     "hora": time.time(),
-    #     "saldoNaHora": clienteTeste.saldo_atual
-    # }
+    return {
+        "horario_transacao": time.time(),
+        "saldo_atual": clienteTeste.saldo_atual
+    }
 
 #rota GET /history
 @app.get("/history", status_code=200)
 def get_history():
     transacoes = repo_transacao.get_all_transactions()
     return {
-        "transactions": [transacao.to_dict() for transacao in transacoes]
+        "transacoes": [transacao.to_dict() for transacao in transacoes]
     }
-
+    
 # from fastapi import FastAPI
 # from src.app.environments import Environments
 # from .repo.item_repository_mock import ItemRepositoryMock
