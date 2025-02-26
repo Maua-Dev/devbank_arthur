@@ -1,6 +1,6 @@
 import time
 from fastapi import FastAPI, HTTPException
-from magnum import magnum
+from mangum import Mangum
 from datetime import datetime
 from .environments import Environments
 from .errors.entity_errors import ParamNotValidated
@@ -63,10 +63,10 @@ def create_withdraw(request: dict):
         if model.get(chave, None) is not None:
             quantia += float(chave) * float(request[chave])
 
-    if quantia > clienteTeste.saldo_atual*2:
+    if quantia > clienteTeste.saldo_atual:
         raise HTTPException(status_code=403, detail="Saldo insuficiente")
 
-    clienteTeste.saldo_atual += quantia
+    clienteTeste.saldo_atual -= quantia
 
     transacao = Transacao(type_transaction=ItemTypeEnum.DEPOSIT, value=quantia, current_balance=clienteTeste.saldo_atual, timestamp=time.time())
 
@@ -98,7 +98,7 @@ def create_deposit(request: dict):
             quantia += float(chave) * float(request[chave])
 
     if quantia > clienteTeste.saldo_atual*2:
-        raise HTTPException(status_code=403, detail="Saldo insuficiente")
+        raise HTTPException(status_code=403, detail="Depósito Suspeito")
 
     clienteTeste.saldo_atual += quantia
 
@@ -151,3 +151,5 @@ def get_history():
 #     data = item.dict()
 #     new_item = item_repo.create_item(ItemInput(**data))
 #     return new_item
+
+handler = Mangum(app, lifespan="off")
