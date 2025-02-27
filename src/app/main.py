@@ -7,7 +7,8 @@ from .errors.entity_errors import ParamNotValidated
 from .enums.item_type_enum import ItemTypeEnum
 from .entities.cliente import Cliente
 from .entities.transacao import Transacao
-from .repo.cliente_repository import ClienteRepository
+from .repo.cliente_repository_mock import ClienteRepositoryMock
+from .repo.transacao_repository_mock import TransacaoRepositoryMock
 
 app = FastAPI()
 
@@ -32,6 +33,7 @@ def get_client(client_id: int):
     valid_client_id = Cliente.client_id(client_id=client_id)
     if not valid_client_id[0]:
         raise HTTPException(status_code=400, detail=valid_client_id[1])
+        print("Erro: ID de cliente inválido")
 
     cliente = repo_cliente.get_client(client_id)
     

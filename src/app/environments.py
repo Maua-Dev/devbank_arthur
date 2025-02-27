@@ -4,7 +4,9 @@ import os
 
 from .errors.environment_errors import EnvironmentNotFound
 
-from .repo.item_repository_interface import IItemRepository
+# from .repo.item_repository_interface import IItemRepository
+from .repo.cliente_repository_interface import IClienteRepository
+from .repo.transacao_repository_interface import ITransacaoRepository
 
 
 class STAGE(Enum):
