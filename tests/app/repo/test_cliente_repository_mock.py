@@ -5,11 +5,11 @@ class Test_ClienteRepositoryMock:
     def test_get_all_clients(self):
         repo = ClienteRepositoryMock()
         
-        clientes = repo.get_all_clients()
+        clientes = set(repo.get_all_clients())
 
-        clientes_esperados = repo.clientes
+        clientes_esperados = set(repo.clientes.values())
 
-        assert clientes_esperados == clientes
+        assert clientes_esperados == clientes   
         
     def test_get_clients(self):
         repo = ClienteRepositoryMock()

@@ -11,8 +11,9 @@ class Test_Main:
     def test_get_all_clients(self):
         repo = ClienteRepositoryMock()
         response = get_all_clients()
+        print(response)
         assert all([client_expect.to_dict() == client for client_expect, client in
-                    zip(repo.clientes.values(), response.get("clients"))])
+                    zip(repo.clientes.values(), response['clientes'])])
 
     def test_get_client(self):
         repo = ClienteRepositoryMock()
@@ -34,8 +35,8 @@ class Test_Main:
             "100": 2,
             "200": 0
         })
-        total_esperado = 294 + repo.get_client(1).saldo_atual
-        assert total_esperado == response.get("saldo_atual")
+        total_esperado = 294 + repo.get_client(1).current_balance
+        assert total_esperado == response.get("current_balance")
 
     def test_saldo_suspeito(self):
         with pytest.raises(fastapi.exceptions.HTTPException) as exc_info:
@@ -49,7 +50,7 @@ class Test_Main:
                 "200": 20
             })
         assert exc_info.value.status_code == 403
-        assert exc_info.value.detail == "Saldo suspeito"
+        assert exc_info.value.detail == "Depósito Suspeito"
 
     def test_create_withdraw(self):
         repo = ClienteRepositoryMock()
@@ -62,8 +63,8 @@ class Test_Main:
             "100": 1,
             "200": 0
         })
-        total_esperado = repo.get_client(1).saldo_atual + 294 - 194
-        assert total_esperado == response.get("saldo_atual")
+        total_esperado = repo.get_client(1).current_balance + 294 - 194
+        assert total_esperado == response.get("current_balance")
 
     def test_saldo_insuficiente(self):
         with pytest.raises(fastapi.exceptions.HTTPException) as exc_info:

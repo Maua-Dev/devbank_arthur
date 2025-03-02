@@ -17,7 +17,7 @@ class ClienteRepositoryMock(IClienteRepository):
         }
         
     def get_all_clients(self) -> List[Cliente]:
-        return self.clientes
+        return self.clientes.values()
     
     def get_client(self, client_id: int) -> Optional[Cliente]:
         return self.clientes.get(client_id, None)          

@@ -79,7 +79,7 @@ class Cliente:
         }
     
     @staticmethod
-    def client_id(client_id: int) -> Tuple[bool, str]:
+    def validate_client_id(client_id: int) -> Tuple[bool, str]:
         if client_id is None:
             return (False, "Id do cliente não pode ser nulo")
         if type(client_id) != int:

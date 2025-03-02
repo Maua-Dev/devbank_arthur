@@ -30,18 +30,14 @@ def get_all_clients():
 #rota GET /
 @app.get("/clientes/get_client")
 def get_client(client_id: int):
-    valid_client_id = Cliente.client_id(client_id=client_id)
-    if not valid_client_id[0]:
-        raise HTTPException(status_code=400, detail=valid_client_id[1])
-        print("Erro: ID de cliente inválido")
-
+    
     cliente = repo_cliente.get_client(client_id)
     
     if cliente is None:
         raise HTTPException(status_code=404, detail="Cliente não encontrado")
     
     return {
-        "ID do Cliente": cliente.client_id(),
+        "ID do Cliente": client_id,
         "Dados do Cliente": cliente.to_dict()
     }
 
@@ -49,7 +45,7 @@ def get_client(client_id: int):
 @app.post("/withdraw", status_code=201)
 def create_withdraw(request: dict):
     
-    modelo = {
+    model = {
         "2": 0,
         "5": 0,
         "10": 0,
@@ -65,25 +61,25 @@ def create_withdraw(request: dict):
         if model.get(chave, None) is not None:
             quantia += float(chave) * float(request[chave])
 
-    if quantia > clienteTeste.saldo_atual:
+    if quantia > clienteTeste.current_balance:
         raise HTTPException(status_code=403, detail="Saldo insuficiente")
 
-    clienteTeste.saldo_atual -= quantia
+    clienteTeste.current_balance -= quantia
 
-    transacao = Transacao(type_transaction=ItemTypeEnum.DEPOSIT, value=quantia, current_balance=clienteTeste.saldo_atual, timestamp=time.time())
+    transacao = Transacao(type_transaction=ItemTypeEnum.DEPOSIT, value=quantia, current_balance=clienteTeste.current_balance, timestamp=time.time())
 
-    repo_transacao.cria_transacao(transac=transacao, transac_id=int((transacao.saldoNaHora * transacao.quantia) / 1000))
+    repo_transacao.create_transaction(transaction=transacao)
 
     return {
         "horario_transacao": time.time(),
-        "saldo_atual": clienteTeste.saldo_atual
+        "current_balance": clienteTeste.current_balance
     }
 
 #rota POST /deposit
 @app.post("/deposit", status_code=201)
 def create_deposit(request: dict):
     
-    modelo = {
+    model = {
         "2": 0,
         "5": 0,
         "10": 0,
@@ -99,18 +95,18 @@ def create_deposit(request: dict):
         if model.get(chave, None) is not None:
             quantia += float(chave) * float(request[chave])
 
-    if quantia > clienteTeste.saldo_atual*2:
+    if quantia > clienteTeste.current_balance*2:
         raise HTTPException(status_code=403, detail="Depósito Suspeito")
 
-    clienteTeste.saldo_atual += quantia
+    clienteTeste.current_balance += quantia
 
-    transacao = Transacao(type_transaction=ItemTypeEnum.DEPOSIT, value=quantia, current_balance=clienteTeste.saldo_atual, timestamp=time.time())
+    transacao = Transacao(type_transaction=ItemTypeEnum.DEPOSIT, value=quantia, current_balance=clienteTeste.current_balance, timestamp=time.time())
 
-    repo_transacao.cria_transacao(transac=transacao, transac_id=int((transacao.saldoNaHora * transacao.quantia) / 1000))
+    repo_transacao.create_transaction(transaction=transacao)
 
     return {
         "horario_transacao": time.time(),
-        "saldo_atual": clienteTeste.saldo_atual
+        "current_balance": clienteTeste.current_balance
     }
 
 #rota GET /history
