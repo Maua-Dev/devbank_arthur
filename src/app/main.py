@@ -66,7 +66,7 @@ def create_withdraw(request: dict):
 
     clienteTeste.current_balance -= quantia
 
-    transacao = Transacao(type_transaction=ItemTypeEnum.DEPOSIT, value=quantia, current_balance=clienteTeste.current_balance, timestamp=time.time())
+    transacao = Transacao(type_transaction=ItemTypeEnum.WITHDRAW, value=quantia, current_balance=clienteTeste.current_balance, timestamp=time.time())
 
     repo_transacao.create_transaction(transaction=transacao)
 
